@@ -26,6 +26,12 @@ class Statement:
     def set_operation(self, operation):
         return self.operations.append(operation)
 
+    def get_operations(self):
+        return self.operations
+
+    def get_transactions_operations(self):
+        return pydash.filter_(self.operations, lambda op: "transaction" in op["operation"])
+
     def get_card_balance(self):
         return self.account["available-limit"]
 
