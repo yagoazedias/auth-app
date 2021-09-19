@@ -23,4 +23,4 @@ class Interface:
                               .review_operation(operation))
 
         for output in outputs:
-            print(output)
+            print(json.dumps(output))
