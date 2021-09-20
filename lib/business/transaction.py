@@ -36,13 +36,16 @@ class TransactionAuthorizer(Authorizer):
         balance = statement.get_card_balance()
         transaction_amount = operation["transaction"]["amount"]
 
-        if balance >= transaction_amount:
+        if not self.has_violations():
             statement.set_account_limit(balance - transaction_amount)
 
         self.result["account"] = statement.get_account()
         statement.set_operation({"operation": operation, "result": self.result})
 
         return self.result
+
+    def has_violations(self):
+        return len(self.result.get("violations")) != 0
 
     def should_apply_account_not_initialized_violation(self):
         return not statement.is_account_created()
@@ -54,6 +57,8 @@ class TransactionAuthorizer(Authorizer):
     def should_apply_insufficient_limit(self, operation):
         return operation["transaction"]["amount"] > statement.get_card_balance()
 
+    # Review this functions because it considers only the last transaction, should consider all previous transactions
+    # that does not have a violation
     def should_apply_highfrequency_small_interval(self, operation):
         operations = statement.get_transactions_operations()
         if len(operations) < 3:
@@ -61,7 +66,7 @@ class TransactionAuthorizer(Authorizer):
 
         operation_datetime = get_datetime_from_operation_time(operation)
         three_last_operations = operations[(len(operations) - 3):]
-        first_relative_operation_datetime = get_datetime_from_operation_time(three_last_operations[0]["operation"])
+        first_relative_operation_datetime = get_datetime_from_operation_time(three_last_operations[0])
 
         return first_relative_operation_datetime > operation_datetime - timedelta(minutes=2)
 
@@ -70,10 +75,16 @@ class TransactionAuthorizer(Authorizer):
         if len(operations) == 0:
             return False
 
-        last_operation = operations[(len(operations) - 1)]["operation"]
-        last_operation_datetime = get_datetime_from_operation_time(last_operation)
-        operation_datetime = get_datetime_from_operation_time(operation)
+        equivalent_operations = pydash.filter_(operations,
+                                               lambda list_op: self._filter_equivalent_operations_in_time_interval(
+                                                   operation, list_op))
+        return equivalent_operations
 
-        return last_operation_datetime > operation_datetime - timedelta(minutes=2) \
-               and last_operation["transaction"]["merchant"] == operation["transaction"]["merchant"] \
-               and last_operation["transaction"]["amount"] == operation["transaction"]["amount"]
+    def _filter_equivalent_operations_in_time_interval(self, op1, op2):
+        is_merchant_equals = op1["transaction"]["merchant"] == op2["transaction"]["merchant"]
+        is_amount_equals = op1["transaction"]["amount"] == op2["transaction"]["amount"]
+
+        is_time_inside_interval = get_datetime_from_operation_time(op1) > \
+                                  get_datetime_from_operation_time(op2) - timedelta(minutes=2)
+
+        return is_merchant_equals and is_amount_equals and is_time_inside_interval

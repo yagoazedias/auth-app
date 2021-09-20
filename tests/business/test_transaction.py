@@ -113,10 +113,9 @@ class TestTransactionAuthorizer(unittest.TestCase):
         mock_statement_get_account.return_value = {"active-card": True, "available-limit": 225}
 
         mock_statement_get_transactions_operations.return_value = [
-            {"operation": {
-                "transaction": {"merchant": "Burger King", "amount": 20, "time": "2019-02-13T11:00:00.000Z"}}},
-            {"operation": {"transaction": {"merchant": "Habbib's", "amount": 20, "time": "2019-02-13T11:00:01.000Z"}}},
-            {"operation": {"transaction": {"merchant": "McDonald's", "amount": 20, "time": "2019-02-13T11:01:01.000Z"}}}
+            {"transaction": {"merchant": "Burger King", "amount": 20, "time": "2019-02-13T11:00:00.000Z"}},
+            {"transaction": {"merchant": "Habbib's", "amount": 20, "time": "2019-02-13T11:00:01.000Z"}},
+            {"transaction": {"merchant": "McDonald's", "amount": 20, "time": "2019-02-13T11:01:01.000Z"}}
         ]
 
         operation = {"transaction": {"merchant": "Subway", "amount": 20, "time": "2019-02-13T11:01:31.000Z"}}
