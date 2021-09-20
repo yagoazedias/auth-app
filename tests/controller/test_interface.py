@@ -69,3 +69,10 @@ class TestControllerInterface(unittest.TestCase):
 
         expected = TRANSACTION_WITH_MULTIPLE_VIOLATIONS_OUTPUT
         self.assertEqual(expected, results)
+
+    def test_transaction_not_considering_previous_transactions_with_violations(self):
+        raw_input = pydash.map_(TRANSACTION_NOT_CONSIDERING_PREVIOUS_TRANSACTION_WITH_VIOLATIONS_INPUT, lambda i: json.dumps(i))
+        results = Interface().apply_operations_from_file_input(raw_input)
+
+        expected = TRANSACTION_NOT_CONSIDERING_PREVIOUS_TRANSACTION_WITH_VIOLATIONS_OUTPUT
+        self.assertEqual(expected, results)

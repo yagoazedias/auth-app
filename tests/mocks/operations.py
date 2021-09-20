@@ -100,3 +100,19 @@ TRANSACTION_WITH_MULTIPLE_VIOLATIONS_OUTPUT = [
     {"account": {"active-card": True, "available-limit": 65}, "violations": ["insufficient-limit", "high-frequency-small-interval"]},
     {"account": {"active-card": True, "available-limit": 50}, "violations": []},
 ]
+
+
+TRANSACTION_NOT_CONSIDERING_PREVIOUS_TRANSACTION_WITH_VIOLATIONS_INPUT = [
+    {"account": {"active-card": True, "available-limit": 1000}},
+    {"transaction": {"merchant": "Vivara", "amount": 1250, "time": "2019-02-13T11:00:00.000Z"}},
+    {"transaction": {"merchant": "Samsung", "amount": 2500, "time": "2019-02-13T11:00:01.000Z"}},
+    {"transaction": {"merchant": "Nike", "amount": 800, "time": "2019-02-13T11:01:01.000Z"}},
+    {"transaction": {"merchant": "Uber", "amount": 80, "time": "2019-02-13T11:01:31.000Z"}},
+]
+TRANSACTION_NOT_CONSIDERING_PREVIOUS_TRANSACTION_WITH_VIOLATIONS_OUTPUT = [
+    {"account": {"active-card": True, "available-limit": 1000}, "violations": []},
+    {"account": {"active-card": True, "available-limit": 1000}, "violations": ["insufficient-limit"]},
+    {"account": {"active-card": True, "available-limit": 1000}, "violations": ["insufficient-limit"]},
+    {"account": {"active-card": True, "available-limit": 200}, "violations": []},
+    {"account": {"active-card": True, "available-limit": 120}, "violations": []},
+]
