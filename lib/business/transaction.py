@@ -28,7 +28,7 @@ class TransactionAuthorizer(Authorizer):
             self.apply_violation(violations.HIGH_FREQUENCY_SMALL_INTERVAL)
 
         if self.should_apply_double_transaction(operation):
-            self.apply_violation(violations.DOUBLE_TRANSACTION)
+            self.apply_violation(violations.DOUBLED_TRANSACTION)
 
         return self.evaluate_operation(operation)
 

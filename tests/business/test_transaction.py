@@ -121,6 +121,6 @@ class TestTransactionAuthorizer(unittest.TestCase):
         operation = {"transaction": {"merchant": "Subway", "amount": 20, "time": "2019-02-13T11:01:31.000Z"}}
         result = TransactionAuthorizer().review_operation(operation)
         expected = {"account": {"active-card": True, "available-limit": 225},
-                    "violations": ["highfrequency-small-interval"]}
+                    "violations": ["high-frequency-small-interval"]}
 
         self.assertEqual(expected, result)

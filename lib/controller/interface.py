@@ -24,3 +24,5 @@ class Interface:
 
         for output in outputs:
             print(json.dumps(output))
+
+        return outputs

@@ -40,5 +40,10 @@ class Statement:
     def set_account_limit(self, limit):
         self.account = {**self.account, "available-limit": limit}
 
+    def _clean_up(self):
+        self.operations = []
+        self.account = {}
+        self.original_limit = 0
+
 
 statement = Statement()
