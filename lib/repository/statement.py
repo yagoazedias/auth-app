@@ -30,10 +30,10 @@ class Statement:
         return self.operations
 
     def get_transactions_operations(self):
-        return pydash.filter_(self.operations, lambda op: "transaction" in op["operation"])
+        return pydash.filter_(self.operations, lambda op: "transaction" in op["operation"] and len(op["result"]["violations"]) == 0)
 
     def get_card_balance(self):
-        return self.account["available-limit"]
+        return self.account.get("available-limit", 0)
 
     def set_account_limit(self, limit):
         self.account = {**self.account, "available-limit": limit}

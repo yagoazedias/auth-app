@@ -16,6 +16,7 @@ class TransactionAuthorizer(Authorizer):
     def review_operation(self, operation):
         if self.should_apply_account_not_initialized_violation():
             self.apply_violation(violations.ACCOUNT_NOT_INITIALIZED)
+            return self.evaluate_operation(operation)
 
         if self.should_apply_card_not_active():
             self.apply_violation(violations.CARD_NOT_ACTIVE)
@@ -29,6 +30,9 @@ class TransactionAuthorizer(Authorizer):
         if self.should_apply_double_transaction(operation):
             self.apply_violation(violations.DOUBLE_TRANSACTION)
 
+        return self.evaluate_operation(operation)
+
+    def evaluate_operation(self, operation):
         balance = statement.get_card_balance()
         transaction_amount = operation["transaction"]["amount"]
 
@@ -37,6 +41,7 @@ class TransactionAuthorizer(Authorizer):
 
         self.result["account"] = statement.get_account()
         statement.set_operation({"operation": operation, "result": self.result})
+
         return self.result
 
     def should_apply_account_not_initialized_violation(self):
