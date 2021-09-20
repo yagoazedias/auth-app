@@ -2,7 +2,7 @@ test:
 	coverage run -m unittest tests/all.py && make coverage
 
 coverage:
-	coverage report --fail-under=95 --show-missing --omit=".venv/*","*/test*"
+	coverage report --fail-under=95 --show-missing --omit=".venv/*","*/test*","lib/business/authorizer.py"
 
 install:
 	pip3 install -r requirements.txt
