@@ -17,29 +17,27 @@ class TransactionAuthorizer(Authorizer):
         if self.should_apply_account_not_initialized_violation():
             self.apply_violation(violations.ACCOUNT_NOT_INITIALIZED)
 
-        elif self.should_apply_card_not_active():
+        if self.should_apply_card_not_active():
             self.apply_violation(violations.CARD_NOT_ACTIVE)
 
-        elif self.should_apply_insufficient_limit(operation):
+        if self.should_apply_insufficient_limit(operation):
             self.apply_violation(violations.INSUFFICIENT_LIMIT)
 
-        elif self.should_apply_highfrequency_small_interval(operation):
+        if self.should_apply_highfrequency_small_interval(operation):
             self.apply_violation(violations.HIGH_FREQUENCY_SMALL_INTERVAL)
 
-        else:
-            balance = statement.get_card_balance()
-            transaction_amount = operation["transaction"]["amount"]
+        if self.should_apply_double_transaction(operation):
+            self.apply_violation(violations.DOUBLE_TRANSACTION)
 
-            if balance >= transaction_amount:
-                statement.set_account_limit(balance - transaction_amount)
+        balance = statement.get_card_balance()
+        transaction_amount = operation["transaction"]["amount"]
+
+        if balance >= transaction_amount:
+            statement.set_account_limit(balance - transaction_amount)
 
         self.result["account"] = statement.get_account()
         statement.set_operation({"operation": operation, "result": self.result})
         return self.result
-
-    def apply_violation(self, violation):
-        self.result["violations"].append(violation)
-
 
     def should_apply_account_not_initialized_violation(self):
         return not statement.is_account_created()
@@ -62,3 +60,15 @@ class TransactionAuthorizer(Authorizer):
 
         return first_relative_operation_datetime > operation_datetime - timedelta(minutes=2)
 
+    def should_apply_double_transaction(self, operation):
+        operations = statement.get_transactions_operations()
+        if len(operations) == 0:
+            return False
+
+        last_operation = operations[(len(operations) - 1)]["operation"]
+        last_operation_datetime = get_datetime_from_operation_time(last_operation)
+        operation_datetime = get_datetime_from_operation_time(operation)
+
+        return last_operation_datetime > operation_datetime - timedelta(minutes=2) \
+               and last_operation["transaction"]["merchant"] == operation["transaction"]["merchant"] \
+               and last_operation["transaction"]["amount"] == operation["transaction"]["amount"]

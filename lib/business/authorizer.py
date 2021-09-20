@@ -10,5 +10,8 @@ class Authorizer:
             "violations": []
         }
 
+    def apply_violation(self, violation):
+        self.result["violations"].append(violation)
+
     def review_operation(self, operation):
         pass
