@@ -1,39 +1,66 @@
 # Instructions
 
-## How to execute
+## Como executar a aplicação
 
-### Installing the dependencies
-I added one Makefile with useful commands:
+### Dependências
+A aplicação é escrita em python, usando a versão 3.8 da linguagem. Para executar você vai precisar das seguintes ferramentas na sua máquina:
+- python 3.8
+- virtualenv 20.4.2
+- make
+- coverage 5.5
+- pip 19.2.3
 
-- To install the dependencies
+
+### Criando o ambiente virtual
+
+**Todos os comando abaixo devem ser executados na raiz do projeto**
+
+Na intenção de criar um ambiente virtual que lhe permita executar o projeto você deve executar os seguintes comandos.
+
 ```bash
-make install
+virtualenv .venv && source .venv/bin/activate
 ```
 
-- To install the dependencies using virtualenv
+### Instalando as dependências
 ```bash
-make install-virtual-env
+pip install -r requirements.txt 
 ```
 
-### Testing
-- To run the test suit:
+### Executando o arquivo de exemplo
+```bash
+python3 authorize.py < samplefile
+```
+
+### Como executar os testes
+Os testes podem ser executados usando o comando `make`
 ```bash
 make test
 ```
 
-### Execution
-- To execute one of the examples:
-```bash
-make run EXAMPLE=1 DATE=2021-01-01 PRECISION=1
+Ou usando diretamente o `coverage`
+```
+coverage run -m unittest tests/all.py && coverage report --fail-under=95 --show-missing --omit=".venv/*","*/test*","lib/business/authorizer.py"
 ```
 
-- To execute one of the examples without make
-```bash
-python3 vesting_program.py example1.csv 2020-04-01
-```
-```bash
-python3 vesting_program.py example2.csv 2021-01-01
-```
-```
-python3 vesting_program.py example3.csv 2021-01-01 1
-```
+Os testes estão configurados para falhar caso o coverage de código seja inferior à 95% 
+
+## Como o projeto está organizados
+
+### Modulos da aplicação
+#### Separação em camadas
+Escolhi uma arquitetura de separação em camadas para essa aplicação por julgar a mais adequada. Além de facilitar o **isolamento das responsabilidades**, 
+por consequência facilita, o mock dos testes de unidade. As camadas foram nomeadas da seguinte maneira.
+
+- **lib/controller**: Responsável por fazer o parse dos dados de input e repassa-los para a camada abaixo
+- **lib/business**: Parte central da lógica de negócios, essa camada irá aplicar todas as regras envolvidas em criação de conta e transações
+- **lib/repository**: Camada de controle do estado da aplicação, inputs validos da aplicação serão armazendos usando um *in-memory state*
+
+#### Modulos auxiliares
+- **lib/helpers**: Métodos de apoio geral (ex: conversão de data)
+- **lib/constants**: Constantes utilizadas dentro do projeto, evitando bugs por erro de ortografia e permitindo refactoring rápido 
+
+#### Modulos de tests
+- **test/controller**: Utilizei os testes da camada de controller para fazer os testes de integração. 
+- **test/business**: Os testes dentro desse modulo são os testes de unidade, normalmente mockam qualquer recurso externo a unidade, permitindo assim uma depuração mais especifica.
+
+[comment]: <> (- **test/repository**: Camada de controle do estado da aplicação, inputs validos da aplicação serão armazendos usando um *in-memory state*)

@@ -8,6 +8,9 @@ from lib.controller.interface import Interface
 from tests.mocks.operations import *
 
 
+# This classe runs the implementation tests, it will execute all code from the layers bellow the controller layer.
+# It will persist on the internal state, but it will be cleaned after each test.
+# The main idea is to ensure that even if a bug do not get caught by the unit test suit we still will be able to get check it
 class TestControllerInterface(unittest.TestCase):
 
     # Cleaning state after each test
