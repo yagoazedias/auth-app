@@ -26,7 +26,7 @@ class TransactionAuthorizer(Authorizer):
         if self.should_apply_insufficient_limit(operation):
             self.apply_violation(violations.INSUFFICIENT_LIMIT)
 
-        if self.should_apply_highfrequency_small_interval(operation):
+        if self.should_apply_high_frequency_small_interval(operation):
             self.apply_violation(violations.HIGH_FREQUENCY_SMALL_INTERVAL)
 
         if self.should_apply_double_transaction(operation):
@@ -61,7 +61,7 @@ class TransactionAuthorizer(Authorizer):
 
     # Review this functions because it considers only the last transaction, should consider all previous transactions
     # that does not have a violation
-    def should_apply_highfrequency_small_interval(self, operation):
+    def should_apply_high_frequency_small_interval(self, operation):
         operations = statement.get_transactions_operations()
         if len(operations) < 3:
             return False

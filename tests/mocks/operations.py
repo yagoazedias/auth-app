@@ -19,6 +19,18 @@ TRANSACTION_CREATION_OUTPUT = [
     {"account": {"active-card": True, "available-limit": 80}, "violations": []}
 ]
 
+# Processando uma transação que viola a lógica card-not-active
+TRANSACTION_WITH_CARD_NOT_ACTIVE_INPUT = [
+    {"account": {"active-card": False, "available-limit": 100}},
+    {"transaction": {"merchant": "Burger King", "amount": 20, "time": "2019-02-13T11:00: 00.000Z"}},
+    {"transaction": {"merchant": "Habbib's", "amount": 15, "time": "2019-02-13T11: 15:00.000Z"}},
+]
+TRANSACTION_WITH_CARD_NOT_ACTIVE_OUTPUT = [
+    {"account": {"active-card": False, "available-limit": 100}, "violations": []},
+    {"account": {"active-card": False, "available-limit": 100}, "violations": ["card-not-active"]},
+    {"account": {"active-card": False, "available-limit": 100}, "violations": ["card-not-active"]},
+]
+
 # Processando uma transação que viola a lógica account-not-initialized
 TRANSACTION_WITH_ACCOUNT_NOT_INITIALIZED_INPUT = [
     {"transaction": {"merchant": "Uber Eats", "amount": 25, "time": "2020-12-01T11:07:00.000Z"}},

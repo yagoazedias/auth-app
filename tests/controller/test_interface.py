@@ -45,6 +45,13 @@ class TestControllerInterface(unittest.TestCase):
         expected = TRANSACTION_WITH_ACCOUNT_NOT_INITIALIZED_OUTPUT
         self.assertEqual(expected, results)
 
+    def test_transaction_with_card_not_active(self):
+        raw_input = pydash.map_(TRANSACTION_WITH_CARD_NOT_ACTIVE_INPUT, lambda i: json.dumps(i))
+        results = Interface().apply_operations_from_file_input(raw_input)
+
+        expected = TRANSACTION_WITH_CARD_NOT_ACTIVE_OUTPUT
+        self.assertEqual(expected, results)
+
     def test_transaction_with_insufficient_limit_violation(self):
         raw_input = pydash.map_(TRANSACTION_WITH_INSUFFICIENT_LIMIT_INPUT, lambda i: json.dumps(i))
         results = Interface().apply_operations_from_file_input(raw_input)
