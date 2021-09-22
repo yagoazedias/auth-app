@@ -62,9 +62,9 @@ Por consequência, facilita o *mocking* dos testes de unidade. As camadas foram 
 #### Modulos de tests
 - **test/controller**: Utilizei os testes da camada de controller para fazer os testes de integração. 
 - **test/business**: Os testes dentro desse modulo são os testes de unidade, normalmente mockam qualquer recurso externo a unidade, permitindo assim uma depuração mais específica.
-
-[comment]: <> (- **test/repository**: Camada de controle do estado da aplicação, inputs validos da aplicação serão armazendos usando um *in-memory state*)
+- **test/repository**: Testes que estressam os métodos de controle de estado da aplicação, eles certificaram que o singleton `statement` está alocando corretamente o estado. 
 
 ## Considerações
 - Compreendi que para as violations `account-not-initialized` e `card-not-active` são impeditivas para o processamento das outras violations, ou seja, não faz sentido eu aplicar elas junto com uma violation `high-frequency-small-interval`, por exemplo.
 - Em algumas partes do documento de especificação a violação de transação dupla é escrita como `doubled-transaction` e outras como `double-transaction`. Assumi a primeira como a correta.
+- Assumi que as transações não estão ordernadas por `time`

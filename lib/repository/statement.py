@@ -13,6 +13,7 @@ class Statement:
 
     def create_account(self, account):
         if self.is_account_created():
+            # Adding a more specific exception
             raise Exception("Account already created")
         self.account = account
         self.original_limit = self.account["available-limit"]

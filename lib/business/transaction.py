@@ -14,8 +14,8 @@ from lib.helpers.time import get_datetime_from_operation_time
 class TransactionAuthorizer(Authorizer):
 
     def review_operation(self, operation):
-        # Account Not Initialized and Card Not Active violations returns the evaluated_operation immediately, because the following violations
-        # requires at least a created account to
+        # Account Not Initialized and Card Not Active violations returns the evaluated_operation immediately,
+        # because the following violations requires at least a created account.
         if self.should_apply_account_not_initialized_violation():
             self.apply_violation(violations.ACCOUNT_NOT_INITIALIZED)
             return self.evaluate_operation(operation)
