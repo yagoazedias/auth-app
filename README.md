@@ -59,10 +59,11 @@ Por consequência, facilita o *mocking* dos testes de unidade. As camadas foram 
 - **lib/helpers**: Métodos de apoio geral (ex: conversão de data)
 - **lib/constants**: Constantes utilizadas dentro do projeto, evitando bugs por erro de ortografia e permitindo refactoring rápido 
 
-#### Modulos de tests
-- **test/controller**: Utilizei os testes da camada de controller para fazer os testes de integração. 
+#### Modulos de tests (Unitário e Integração)
+- **test/controller**: Utilizei os testes da camada de controller para fazer os testes ponto a ponta utilizando todas as camadas a baixo. 
 - **test/business**: Os testes dentro desse modulo são os testes de unidade, normalmente mockam qualquer recurso externo a unidade, permitindo assim uma depuração mais específica.
-- **test/repository**: Testes que estressam os métodos de controle de estado da aplicação, eles certificaram que o singleton `statement` está alocando corretamente o estado. 
+- **test/repository**: Testes que estressam os métodos de controle de estado da aplicação, eles certificaram que o singleton `statement` está alocando corretamente o estado.
+- **test/integration**: Modulo responsável por fazer os testes de integração, dentro dele existem arquivos texto de inputs de exemplo e outputs correspontes esperados pelos testes.
 
 ## Considerações
 - Compreendi que para as violations `account-not-initialized` e `card-not-active` são impeditivas para o processamento das outras violations, ou seja, não faz sentido eu aplicar elas junto com uma violation `high-frequency-small-interval`, por exemplo.
