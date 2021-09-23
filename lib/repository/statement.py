@@ -31,7 +31,7 @@ class Statement:
         return self.operations
 
     def get_transactions_operations(self):
-        operations = pydash.filter_(self.operations, lambda op: "transaction" in op["operation"] and len(op["result"]["violations"]) == 0)
+        operations = pydash.filter_(self.operations, lambda op: "transaction" in op["operation"])
         transactions = pydash.map_(operations, lambda operation: operation["operation"])
         return transactions
 

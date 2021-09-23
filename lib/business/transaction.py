@@ -43,7 +43,9 @@ class TransactionAuthorizer(Authorizer):
             statement.set_account_limit(balance - transaction_amount)
 
         self.result["account"] = statement.get_account()
-        statement.set_operation({"operation": operation, "result": self.result})
+
+        if not self.has_violations():
+            statement.set_operation({"operation": operation, "result": self.result})
 
         return self.result
 
