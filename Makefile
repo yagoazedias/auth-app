@@ -1,6 +1,9 @@
 test:
 	coverage run -m unittest tests/all.py && make coverage
 
+single-test:
+	python3 -m unittest
+
 coverage:
 	coverage report --fail-under=95 --show-missing --omit=".venv/*","*/test*","lib/business/authorizer.py"
 
